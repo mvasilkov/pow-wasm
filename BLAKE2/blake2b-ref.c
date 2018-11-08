@@ -15,7 +15,6 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <stdio.h>
 
 #include "blake2.h"
 #include "blake2-impl.h"
@@ -311,7 +310,7 @@ int crypto_hash( unsigned char *out, unsigned char *in, unsigned long long inlen
 #endif
 
 #if defined(BLAKE2B_SELFTEST)
-#include <string.h>
+#include <stdio.h>
 #include "blake2-kat.h"
 int main( void )
 {
