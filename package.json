@@ -1,0 +1,22 @@
+{
+  "name": "pow-wasm",
+  "version": "0.0.0",
+  "description": "Proof of Work based on BLAKE2b, written in JavaScript and WebAssembly",
+  "keywords": [
+    "blake2b",
+    "hashcash",
+    "proof-of-work",
+    "wasm",
+    "webassembly"
+  ],
+  "main": "validate.js",
+  "repository": "git@github.com:mvasilkov/pow-wasm.git",
+  "author": "Mark Vasilkov (https://github.com/mvasilkov)",
+  "license": "MIT",
+  "scripts": {
+    "test": "ava"
+  },
+  "devDependencies": {
+    "ava": "1.0.0-rc.1"
+  }
+}
