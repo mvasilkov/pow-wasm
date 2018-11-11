@@ -6,16 +6,21 @@
 
 const HEADER_SIZE = 24
 
-exports.solve = function loading() {
-    throw Error('Loading')
-}
+// https://github.com/iliakan/detect-node
+const isNode = Object.prototype.toString.call(typeof process != 'undefined' ? process : 0) === '[object process]'
 
-require('./pow/solve')().then(Module => {
+let _solve
+
+const wait = require('./pow/solve')().then(Module => {
     if (!Module.usingWasm) {
         throw Error('Not good')
     }
 
-    exports.solve = function solve(salt, bits, contents, done) {
+    if (isNode && typeof TextEncoder == 'undefined') {
+        global.TextEncoder = require('util').TextEncoder
+    }
+
+    _solve = function solve(salt, bits, contents, done) {
         contents = (new TextEncoder).encode(contents)
 
         const buf_pointer = Module.ccall('get_buf', 'number')
@@ -37,4 +42,10 @@ function bytes(a) {
         b.push(parseInt(a.substr(n, 2), 16))
     }
     return b
+}
+
+exports.solve = function solve(salt, bits, contents, done) {
+    wait.then(function () {
+        _solve(salt, bits, contents, done)
+    })
 }

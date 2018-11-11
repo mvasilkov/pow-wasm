@@ -47,8 +47,11 @@ exports.solve = function solve(salt, bits, contents, done) {
             count += 32
         }
 
-        if (count >= bits) return n
+        if (count >= bits) {
+            done(n)
+            return
+        }
     }
 
-    return NONCE_CARDINALITY
+    done(NONCE_CARDINALITY)
 }
