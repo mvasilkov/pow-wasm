@@ -2,15 +2,13 @@
  * https://github.com/mvasilkov/pastechan
  * Copyright (c) 2018 Mark Vasilkov (https://github.com/mvasilkov)
  * License: MIT */
+#include <stdint.h>
 
 #include "../BLAKE2/blake2.h"
 
-enum solve_constant
-{
-    BUF_SIZE = 1048600,
-    BLAKE2B_OUTDWORDS = BLAKE2B_OUTBYTES / 4,
-    NONCE_53BITS = 0x20000000000000
-};
+#define BUF_SIZE 1048600
+#define BLAKE2B_OUTDWORDS 16
+#define NONCE_CARDINALITY 0x20000000000000
 
 struct buf
 {
@@ -29,7 +27,7 @@ double solve(int bits)
     uint32_t *u32hash = (uint32_t *)hash;
     int64_t *pn = (int64_t *)buf.contents;
 
-    for (int64_t n = 0; n < NONCE_53BITS; ++n)
+    for (int64_t n = 0; n < NONCE_CARDINALITY; ++n)
     {
         *pn = n;
         blake2b(hash, BLAKE2B_OUTBYTES, buf.contents, buf.length, NULL, 0);
@@ -50,5 +48,5 @@ double solve(int bits)
             return n;
     }
 
-    return NONCE_53BITS;
+    return NONCE_CARDINALITY;
 }
