@@ -1,6 +1,14 @@
-# pow-wasm
+pow-wasm
+===
 
 Proof of Work based on BLAKE2b, written in JavaScript and WebAssembly
+
+Installation
+---
+
+```sh
+yarn add pow-wasm
+```
 
 **Message format**
 

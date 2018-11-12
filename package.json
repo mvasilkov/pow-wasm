@@ -8,6 +8,11 @@
     "proof-of-work",
     "webassembly"
   ],
+  "files": [
+    "pow/solve.*",
+    "solve.js",
+    "validate.js"
+  ],
   "main": "validate.js",
   "repository": "git@github.com:mvasilkov/pow-wasm.git",
   "author": "Mark Vasilkov (https://github.com/mvasilkov)",
