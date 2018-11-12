@@ -10,6 +10,24 @@ Installation
 yarn add pow-wasm
 ```
 
+Usage
+---
+
+```js
+const ObjectId = require('bson').ObjectId
+const solve = require('pow-wasm/solve').solve
+const validate = require('pow-wasm').validate
+
+const salt = '' + ObjectId()
+console.log(salt) // 5be97e10b697c24689180e9b
+
+solve(salt, 20, 'oh hai', nonce => {
+    console.log(nonce) // 1013723
+    const result = validate(nonce, salt, 20, 'oh hai')
+    console.log(result) // true
+})
+```
+
 **Message format**
 
 | Name | Type | Size | Comment
