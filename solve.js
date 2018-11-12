@@ -5,9 +5,10 @@
 'use strict'
 
 const HEADER_SIZE = 24
+const CONTENT_SIZE = 0x100000
 
 // https://github.com/iliakan/detect-node
-const isNode = Object.prototype.toString.call(typeof process != 'undefined' ? process : 0) === '[object process]'
+const isNode = Object.prototype.toString.call(typeof process != 'undefined' ? process : 0) == '[object process]'
 
 let _solve
 
@@ -22,6 +23,10 @@ const wait = require('./pow/solve')().then(Module => {
 
     _solve = function solve(salt, bits, contents, done) {
         contents = (new TextEncoder).encode(contents)
+
+        if (contents.length > CONTENT_SIZE) {
+            throw Error('Much content')
+        }
 
         const buf_pointer = Module.ccall('get_buf', 'number')
         const mem = Module.wasmMemory.buffer
