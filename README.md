@@ -1,7 +1,7 @@
 pow-wasm
 ===
 
-Proof of Work based on BLAKE2b, written in JavaScript and WebAssembly
+Proof of work similar to Hashcash, based on BLAKE2b, written in JavaScript and WebAssembly
 
 Installation
 ---
@@ -21,7 +21,7 @@ const validate = require('pow-wasm').validate
 const salt = '' + ObjectId()
 console.log(salt) // 5be97e10b697c24689180e9b
 
-solve(salt, 20, 'oh hai', nonce => {
+solve(salt, 20, 'oh hai').then(nonce => {
     console.log(nonce) // 1013723
     const result = validate(nonce, salt, 20, 'oh hai')
     console.log(result) // true

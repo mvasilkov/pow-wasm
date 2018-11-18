@@ -14,7 +14,7 @@ const NONCE_CARDINALITY = 0x20000000000000
 const dwordLo = a => a & 0xffffffff
 const dwordHi = a => (a / 0x100000000) & 0xffffffff
 
-exports.solve = function solve(salt, bits, contents, done) {
+function solve(salt, bits, contents, done) {
     const bufNonce = Buffer.allocUnsafe(8)
 
     const bufSep = Buffer.from('\t', 'utf8')
@@ -55,3 +55,6 @@ exports.solve = function solve(salt, bits, contents, done) {
 
     done(NONCE_CARDINALITY)
 }
+
+exports.solve = (salt, bits, contents) =>
+    new Promise(done => solve(salt, bits, contents, done))

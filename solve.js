@@ -49,8 +49,11 @@ function bytes(a) {
     return b
 }
 
-exports.solve = function solve(salt, bits, contents, done) {
+function solve(salt, bits, contents, done) {
     wait.then(function () {
         _solve(salt, bits, contents, done)
     })
 }
+
+exports.solve = (salt, bits, contents) =>
+    new Promise(done => solve(salt, bits, contents, done))
