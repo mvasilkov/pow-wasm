@@ -12,33 +12,37 @@ const isNode = Object.prototype.toString.call(typeof process != 'undefined' ? pr
 
 let _solve
 
-const wait = require('./pow/solve')().then(Module => {
-    if (!Module.usingWasm) {
-        throw Error('Not good')
-    }
-
-    if (isNode && typeof TextEncoder == 'undefined') {
-        global.TextEncoder = require('util').TextEncoder
-    }
-
-    _solve = function solve(salt, bits, contents, done) {
-        contents = (new TextEncoder).encode(contents)
-
-        if (contents.length > CONTENT_SIZE) {
-            throw Error('Much content')
+const wait = new Promise(done => {
+    require('./pow/solve')().then(Module => {
+        if (!Module.usingWasm) {
+            throw Error('Not good')
         }
 
-        const buf_pointer = Module.ccall('get_buf', 'number')
-        const mem = Module.wasmMemory.buffer
-        const u32 = new Uint32Array(mem, buf_pointer, 1)
-        const u8 = new Uint8Array(mem, buf_pointer + 4, u32[0] = contents.length + HEADER_SIZE)
+        if (isNode && typeof TextEncoder == 'undefined') {
+            global.TextEncoder = require('util').TextEncoder
+        }
 
-        // nonce : salt : bits : contents
-        u8.set([9, ...bytes(salt), 9, bits, 9], 8)
-        u8.set(contents, HEADER_SIZE)
+        _solve = function solve(salt, bits, contents) {
+            contents = (new TextEncoder).encode(contents)
 
-        done(Module.ccall('solve', 'number', ['number'], [bits]))
-    }
+            if (contents.length > CONTENT_SIZE) {
+                throw Error('Much content')
+            }
+
+            const buf_pointer = Module.ccall('get_buf', 'number')
+            const mem = Module.wasmMemory.buffer
+            const u32 = new Uint32Array(mem, buf_pointer, 1)
+            const u8 = new Uint8Array(mem, buf_pointer + 4, u32[0] = contents.length + HEADER_SIZE)
+
+            // nonce : salt : bits : contents
+            u8.set([9, ...bytes(salt), 9, bits, 9], 8)
+            u8.set(contents, HEADER_SIZE)
+
+            return Module.ccall('solve', 'number', ['number'], [bits])
+        }
+
+        done()
+    })
 })
 
 function bytes(a) {
@@ -49,11 +53,5 @@ function bytes(a) {
     return b
 }
 
-function solve(salt, bits, contents, done) {
-    wait.then(function () {
-        _solve(salt, bits, contents, done)
-    })
-}
-
 exports.solve = (salt, bits, contents) =>
-    new Promise(done => solve(salt, bits, contents, done))
+    wait.then(() => _solve(salt, bits, contents))

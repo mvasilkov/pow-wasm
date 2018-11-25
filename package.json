@@ -1,6 +1,6 @@
 {
   "name": "pow-wasm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Proof of work similar to Hashcash, based on BLAKE2b, written in JavaScript and WebAssembly",
   "keywords": [
     "blake2b",
